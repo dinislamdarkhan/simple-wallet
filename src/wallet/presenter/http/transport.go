@@ -14,6 +14,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
+const (
+	currencyError      = "Incorrect currency, supports only USD,EUR"
+	operationTypeError = "Incorrect type, supports only deposit,withdrawal"
+)
+
 func MakeHandler(service presenter.Service) http.Handler {
 	router := mux.NewRouter()
 	opts := []kithttp.ServerOption{
@@ -44,6 +49,14 @@ func decodeDoTransactionRequest(_ context.Context, r *http.Request) (interface{}
 	err := validate.Struct(body)
 	if err != nil {
 		return nil, errors.BadRequest.SetMessage(err.Error())
+	}
+
+	if !data.CurrencyMap[body.Currency] {
+		return nil, errors.BadRequest.SetMessage(currencyError)
+	}
+
+	if !data.OperationTypeMap[body.Type] {
+		return nil, errors.BadRequest.SetMessage(operationTypeError)
 	}
 
 	return body, nil
