@@ -5,6 +5,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/dinislamdarkhan/simple-wallet/src/app/start"
+	"github.com/dinislamdarkhan/simple-wallet/src/pkg/grace"
+
 	"github.com/dinislamdarkhan/simple-wallet/src/app/config"
 	"github.com/dinislamdarkhan/simple-wallet/src/app/conns"
 	"github.com/sirupsen/logrus"
@@ -28,4 +31,9 @@ func Run(httpAddr string) {
 	if err != nil {
 		logrus.Fatalf("create connections error: %v", err)
 	}
+
+	httpListener := start.HTTP(httpAddr, errs)
+	graceful := grace.KillSoftly(httpListener)
+
+	graceful.Shutdown(errs, connections)
 }
