@@ -5,18 +5,19 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter"
-	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter/data"
+	walletPresenter "github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter"
+	walletData "github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter/data"
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 )
 
-func MakeHandler(service presenter.Service, r *mux.Router) {
+func MakeHandler(service walletPresenter.Service) http.Handler {
+	router := mux.NewRouter()
 	opts := []kithttp.ServerOption{
 		kithttp.ServerErrorEncoder(kithttp.DefaultErrorEncoder),
 	}
 
-	r.Handle(
+	router.Handle(
 		"/v1/wallet/do-transaction",
 		kithttp.NewServer(
 			makePostDoTransactionEndpoint(service),
@@ -25,10 +26,12 @@ func MakeHandler(service presenter.Service, r *mux.Router) {
 			opts...,
 		),
 	).Methods("POST")
+
+	return router
 }
 
 func decodeDoTransactionRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var body data.PostDoTransactionRequest
+	var body walletData.PostDoTransactionRequest
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		return nil, err
 	}

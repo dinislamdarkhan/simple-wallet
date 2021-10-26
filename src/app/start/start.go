@@ -6,12 +6,14 @@ import (
 	"time"
 
 	"github.com/dinislamdarkhan/simple-wallet/src/pkg/grace"
+	walletHTTP "github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter/http"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sirupsen/logrus"
 )
 
-func HTTP(httpAddr string, errs chan<- error) grace.Service {
+func HTTP(services *service, httpAddr string, errs chan<- error) grace.Service {
 	mux := http.NewServeMux()
+
 	http.Handle("/v1/", func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -25,13 +27,14 @@ func HTTP(httpAddr string, errs chan<- error) grace.Service {
 			h.ServeHTTP(w, r)
 		})
 	}(mux))
+
+	mux.Handle("/v1/wallet/", walletHTTP.MakeHandler(services.wallet))
 	mux.Handle("/metrics", promhttp.Handler())
 
 	logrus.Infof("start http server on %s", httpAddr)
 	logrus.WithFields(logrus.Fields{"transport": "http", "address": httpAddr}).Info("listening simple-wallet")
 
 	server := &http.Server{Addr: httpAddr, Handler: mux}
-
 	go func() {
 		errs <- server.ListenAndServe()
 	}()
