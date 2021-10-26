@@ -4,6 +4,7 @@ create table if not exists wallet
     currency text,
     user_id  text,
     amount   decimal,
+    updated_time timestamp,
     primary key (currency, user_id)
 )
     with caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}

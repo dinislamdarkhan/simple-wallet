@@ -2,6 +2,7 @@ package cassandra
 
 import (
 	"context"
+	"time"
 
 	"github.com/dinislamdarkhan/simple-wallet/src/wallet/repository"
 	"github.com/gocql/gocql"
@@ -17,8 +18,8 @@ func New(db *gocql.Session) repository.CassandraRepository {
 	}
 }
 
-func (c *cassandraRepository) UpdateWalletAmount(ctx context.Context, currency, userID string, amount float64) error {
-	if err := c.db.Query(`UPDATE wallet SET amount = ? WHERE currency = ? AND user_id = ?`, amount, currency, userID).Exec(); err != nil {
+func (c *cassandraRepository) UpdateWalletAmount(ctx context.Context, currency, userID string, amount float64, updatedTime time.Time) error {
+	if err := c.db.Query(`UPDATE wallet SET amount = ?, updated_time = ? WHERE currency = ? AND user_id = ?`, amount, updatedTime, currency, userID).Exec(); err != nil {
 		return err
 	}
 	return nil
