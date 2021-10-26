@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+
 	"github.com/dinislamdarkhan/simple-wallet/src/app"
 )
 
