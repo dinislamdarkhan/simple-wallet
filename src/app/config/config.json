@@ -1,0 +1,10 @@
+{
+  "cassandra": {
+    "connection_ip": [
+      "localhost"
+    ]
+  },
+  "logrus": {
+    "level": 5
+  }
+}
