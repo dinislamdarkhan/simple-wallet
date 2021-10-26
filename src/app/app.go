@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/dinislamdarkhan/simple-wallet/src/app/config"
+	"github.com/dinislamdarkhan/simple-wallet/src/app/conns"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,4 +22,10 @@ func Run(httpAddr string) {
 	})
 	logrus.SetOutput(os.Stdout)
 	logrus.SetLevel(logrus.Level(cfg.Logrus.Level))
+
+	errs := make(chan error, 2)
+	connections, err := conns.New(cfg.Cassandra)
+	if err != nil {
+		logrus.Fatalf("create connections error: %v", err)
+	}
 }
