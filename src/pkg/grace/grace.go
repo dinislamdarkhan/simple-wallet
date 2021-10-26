@@ -46,7 +46,7 @@ func (g Graceful) Shutdown(errs chan error, conn Connections) {
 
 	conn.Close()
 
-	logrus.Println("Connections closed\nBye!")
+	logrus.Println("Connections closed")
 
 	os.Exit(exitCode)
 }
