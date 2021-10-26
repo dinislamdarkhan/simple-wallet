@@ -15,6 +15,7 @@ var (
 	CassandraReadError    = &Error{409, "cassandra read error"}
 	CassandraConnectError = &Error{503, "cassandra connection error"}
 	DeserializeError      = &Error{415, "deserialization error"}
+	NetworkTimeout        = &Error{503, "connection error by timeout"}
 )
 
 type Error struct {
@@ -39,7 +40,7 @@ func EncodeErrorJSON(_ context.Context, err error, w http.ResponseWriter) {
 		w.WriteHeader(http.StatusConflict)
 	case NotFound:
 		w.WriteHeader(http.StatusNotFound)
-	case CassandraConnectError:
+	case CassandraConnectError, NetworkTimeout:
 		w.WriteHeader(http.StatusServiceUnavailable)
 	case DeserializeError:
 		w.WriteHeader(http.StatusUnsupportedMediaType)
