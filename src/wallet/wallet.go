@@ -18,19 +18,19 @@ func New(store store.RepositoryStore) (service presenter.Service) {
 	fieldKeys := []string{"method"}
 	service = utils.WithInstrumenting(
 		kitmetrics.NewCounterFrom(prometheus.CounterOpts{
-			Namespace: "simple-wallet-API",
+			Namespace: "simple_wallet_API",
 			Subsystem: "wallet_service",
 			Name:      "request_count",
 			Help:      "Number of requests received.",
 		}, fieldKeys),
 		kitmetrics.NewSummaryFrom(prometheus.SummaryOpts{
-			Namespace: "simple-wallet-API",
+			Namespace: "simple_wallet_API",
 			Subsystem: "wallet_service",
 			Name:      "request_latency_microseconds",
 			Help:      "Total duration of requests in microseconds.",
 		}, fieldKeys),
 		kitmetrics.NewCounterFrom(prometheus.CounterOpts{
-			Namespace: "simple-wallet-API",
+			Namespace: "simple_wallet_API",
 			Subsystem: "wallet_service",
 			Name:      "error_count",
 			Help:      "Number of error requests received.",
