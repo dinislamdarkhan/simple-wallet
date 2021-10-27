@@ -4,6 +4,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/dinislamdarkhan/simple-wallet/src/pkg/errors"
+	"github.com/sirupsen/logrus"
+
 	"github.com/dinislamdarkhan/simple-wallet/src/wallet/repository"
 	"github.com/gocql/gocql"
 )
@@ -31,4 +34,15 @@ func (c *cassandraRepository) GetWalletAmount(ctx context.Context, currency, use
 		return 0, err
 	}
 	return amount, nil
+}
+
+func (c *cassandraRepository) CheckAmountExists(ctx context.Context, currency, userID string) (count int, err error) {
+	logger := logrus.WithContext(ctx)
+
+	if err = c.db.Query(`SELECT count(*) FROM wallet WHERE currency = ? AND user_id = ? LIMIT 1`, currency, userID).Scan(&count); err != nil {
+		logger.Error("CheckAmountIfExistsFromCassandra: ", err)
+		return 0, errors.CassandraReadError.SetMessage(err.Error())
+	}
+
+	return count, nil
 }
