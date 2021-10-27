@@ -7,3 +7,7 @@ type PostDoTransactionRequest struct {
 	Type       string  `json:"type" validate:"required,alpha"`
 	TimePlaced string  `json:"time_placed" validate:"required"`
 }
+
+type GetWalletBalanceRequest struct {
+	UserID string `validate:"required"`
+}

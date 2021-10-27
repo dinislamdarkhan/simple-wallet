@@ -117,7 +117,7 @@ func TestDoTransaction(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			m := &mocks.DoTransactionRepository{}
-			m.On("CheckAmountExists", ctx, tt.request.Currency, tt.request.UserID).Return(tt.returnCheckAmountExists, tt.returnCassandraError)
+			m.On("CheckAmountExistsCassandra", ctx, tt.request.Currency, tt.request.UserID).Return(tt.returnCheckAmountExists, tt.returnCassandraError)
 			m.On("GetWalletAmountCassandra", ctx, tt.request.Currency, tt.request.UserID).Return(tt.returnGetWalletAmountCassandra, tt.returnCassandraError)
 			m.On("UpdateWalletAmountCassandra", ctx, tt.request.Currency, tt.request.UserID, mock.Anything, mock.Anything).Return(tt.returnCassandraError)
 

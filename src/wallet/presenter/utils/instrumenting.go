@@ -36,12 +36,22 @@ func metricMethod(i *instrumentingMiddleware, method string, begin time.Time, er
 	i.requestLatency.With("method", method).Observe(time.Since(begin).Seconds())
 }
 
-func (i *instrumentingMiddleware) PostDoTransaction(ctx context.Context, req *domain.PostDoTransactionRequest) (response *domain.PostDoTransactionResponse, err error) {
+func (i *instrumentingMiddleware) PostDoTransaction(ctx context.Context, req *domain.PostDoTransactionRequest) (resp *domain.PostDoTransactionResponse, err error) {
 	defer func(begin time.Time) {
 		metricMethod(i, "PostDoTransaction", begin, err)
 	}(time.Now())
 
-	response, err = i.service.PostDoTransaction(ctx, req)
+	resp, err = i.service.PostDoTransaction(ctx, req)
+
+	return
+}
+
+func (i *instrumentingMiddleware) GetWalletBalance(ctx context.Context, req *domain.GetWalletBalanceRequest) (resp *domain.GetWalletBalanceResponse, err error) {
+	defer func(begin time.Time) {
+		metricMethod(i, "GetWalletBalance", begin, err)
+	}(time.Now())
+
+	resp, err = i.service.GetWalletBalance(ctx, req)
 
 	return
 }

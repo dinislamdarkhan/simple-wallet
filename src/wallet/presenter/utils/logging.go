@@ -39,12 +39,22 @@ func logMethod(ctx context.Context, name, method string, request, response inter
 	}
 }
 
-func (l *loggingMiddleware) PostDoTransaction(ctx context.Context, req *domain.PostDoTransactionRequest) (response *domain.PostDoTransactionResponse, err error) {
+func (l *loggingMiddleware) PostDoTransaction(ctx context.Context, req *domain.PostDoTransactionRequest) (resp *domain.PostDoTransactionResponse, err error) {
 	defer func(begin time.Time) {
-		logMethod(ctx, l.name, "PostDoTransaction", req, response, begin, err)
+		logMethod(ctx, l.name, "PostDoTransaction", req, resp, begin, err)
 	}(time.Now())
 
-	response, err = l.service.PostDoTransaction(ctx, req)
+	resp, err = l.service.PostDoTransaction(ctx, req)
+
+	return
+}
+
+func (l *loggingMiddleware) GetWalletBalance(ctx context.Context, req *domain.GetWalletBalanceRequest) (resp *domain.GetWalletBalanceResponse, err error) {
+	defer func(begin time.Time) {
+		logMethod(ctx, l.name, "GetWalletBalance", req, resp, begin, err)
+	}(time.Now())
+
+	resp, err = l.service.GetWalletBalance(ctx, req)
 
 	return
 }
