@@ -25,7 +25,7 @@ const (
 type DoTransactionRepository interface {
 	GetWalletAmountCassandra(ctx context.Context, currency, userID string) (float64, error)
 	UpdateWalletAmountCassandra(ctx context.Context, currency, userID string, amount float64, updatedTime time.Time) error
-	CheckAmountExists(ctx context.Context, currency, userID string) (count int, err error)
+	CheckAmountExistsCassandra(ctx context.Context, currency, userID string) (count int, err error)
 }
 
 type DoTransactionFacade struct {
@@ -40,7 +40,7 @@ func (f *DoTransactionFacade) UpdateWalletAmountCassandra(ctx context.Context, c
 	return f.Store.WalletCassandra().UpdateWalletAmount(ctx, currency, userID, amount, updatedTime)
 }
 
-func (f *DoTransactionFacade) CheckAmountExists(ctx context.Context, currency, userID string) (count int, err error) {
+func (f *DoTransactionFacade) CheckAmountExistsCassandra(ctx context.Context, currency, userID string) (count int, err error) {
 	return f.Store.WalletCassandra().CheckAmountExists(ctx, currency, userID)
 }
 
@@ -65,7 +65,7 @@ func DoTransaction(ctx context.Context, repo DoTransactionRepository, req *domai
 	}
 
 	amount := 0.0
-	count, err := repo.CheckAmountExists(ctx, req.Currency, req.UserID)
+	count, err := repo.CheckAmountExistsCassandra(ctx, req.Currency, req.UserID)
 	if err != nil {
 		return nil, err
 	}
