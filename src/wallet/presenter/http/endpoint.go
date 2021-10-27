@@ -10,8 +10,8 @@ import (
 	"github.com/go-kit/kit/endpoint"
 )
 
-// swagger:route POST /v1/wallet/do-transaction Wallet PostDoTransactionRequest
-// Сделать транзакцию
+// swagger:route POST /v1/wallet/transaction Wallet PostDoTransactionRequest
+// Request new transaction
 // responses:
 // 200: PostDoTransactionResponse
 func makePostDoTransactionEndpoint(s presenter.Service) endpoint.Endpoint {
@@ -29,6 +29,10 @@ func makePostDoTransactionEndpoint(s presenter.Service) endpoint.Endpoint {
 	}
 }
 
+// swagger:route POST /v1/wallet/balance/{user_id} Wallet GetWalletBalanceRequest
+// Get all balance of user group by currency
+// responses:
+// 200: GetWalletBalanceResponse
 func makeGetWalletBalanceEndpoint(s presenter.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(domain.GetWalletBalanceRequest)

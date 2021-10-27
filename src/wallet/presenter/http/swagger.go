@@ -13,3 +13,15 @@ type PostDoTransactionResponse struct {
 	// in:body
 	Body domain.PostDoTransactionResponse
 }
+
+// swagger:parameters GetWalletBalanceRequest
+type GetWalletBalanceRequest struct {
+	// in:body
+	Body domain.GetWalletBalanceRequest
+}
+
+// swagger:parameters GetWalletBalanceResponse
+type GetWalletBalanceResponse struct {
+	// in:body
+	Body domain.GetWalletBalanceResponse
+}
