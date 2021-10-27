@@ -3,7 +3,7 @@ create table if not exists wallet
 (
     currency text,
     user_id  text,
-    amount   decimal,
+    amount   double,
     updated_time timestamp,
     primary key (currency, user_id)
 )
