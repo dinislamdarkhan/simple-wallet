@@ -45,7 +45,7 @@ func (s *service) GetWalletBalance(ctx context.Context, req *domain.GetWalletBal
 	ch := make(chan error, 1)
 
 	go func() {
-		resp, err = logic.GetWalletBalance(ctx, &logic.WalletBalanceRepositoryFacade{Store: s.store}, req)
+		resp, err = logic.WalletBalance(ctx, &logic.WalletBalanceRepositoryFacade{Store: s.store}, req)
 
 		ch <- err
 	}()
