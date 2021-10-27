@@ -21,7 +21,7 @@ func MakeHandler(service presenter.Service) http.Handler {
 	}
 
 	router.Handle(
-		"/v1/wallet/do-transaction",
+		"/v1/wallet/transaction",
 		kithttp.NewServer(
 			makePostDoTransactionEndpoint(service),
 			decodeDoTransactionRequest,
@@ -29,6 +29,16 @@ func MakeHandler(service presenter.Service) http.Handler {
 			opts...,
 		),
 	).Methods("POST")
+
+	router.Handle(
+		"/v1/wallet/balance/{user_id}",
+		kithttp.NewServer(
+			makeGetWalletBalanceEndpoint(service),
+			decodeGetWalletBalanceRequest,
+			kithttp.EncodeJSONResponse,
+			opts...,
+		),
+	).Methods("GET")
 
 	return router
 }
@@ -38,6 +48,19 @@ func decodeDoTransactionRequest(_ context.Context, r *http.Request) (interface{}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		return nil, errors.DeserializeError.SetMessage(err.Error())
 	}
+
+	return body, nil
+}
+
+func decodeGetWalletBalanceRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var body domain.GetWalletBalanceRequest
+	vars := mux.Vars(r)
+	uid, ok := vars["user_id"]
+	if !ok {
+		return nil, errors.NotFound
+	}
+
+	body.UserID = uid
 
 	return body, nil
 }
