@@ -10,6 +10,10 @@ import (
 	"github.com/go-kit/kit/endpoint"
 )
 
+// swagger:route POST /v1/wallet/do-transaction Wallet PostDoTransactionRequest
+// Сделать транзакцию
+// responses:
+// 200: PostDoTransactionResponse
 func makePostDoTransactionEndpoint(s presenter.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(domain.PostDoTransactionRequest)

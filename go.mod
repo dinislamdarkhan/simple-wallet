@@ -3,6 +3,7 @@ module github.com/dinislamdarkhan/simple-wallet
 go 1.17
 
 require (
+	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
 	github.com/go-kit/kit v0.10.0
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/gocql/gocql v0.0.0-20200926162733-393f0c961220
