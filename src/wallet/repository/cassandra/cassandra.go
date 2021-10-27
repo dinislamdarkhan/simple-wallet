@@ -21,25 +21,26 @@ func New(db *gocql.Session) repository.CassandraRepository {
 	}
 }
 
-func (c *cassandraRepository) UpdateWalletAmount(ctx context.Context, currency, userID string, amount float64, updatedTime time.Time) error {
+func (c *cassandraRepository) UpdateWalletAmount(ctx context.Context, currency, userID string, amount float64, updatedTime time.Time) (err error) {
 	logger := logrus.WithContext(ctx)
 
 	if err := c.db.Query(`UPDATE wallet SET amount = ?, updated_time = ? WHERE currency = ? AND user_id = ?`, amount, updatedTime, currency, userID).Exec(); err != nil {
 		logger.Error("UpdateWalletAmountInCassandra: ", err)
 		return errors.CassandraSaveError.SetMessage(err.Error())
 	}
-	return nil
+
+	return
 }
 
 func (c *cassandraRepository) GetWalletAmount(ctx context.Context, currency, userID string) (amount float64, err error) {
 	logger := logrus.WithContext(ctx)
 
-	if err = c.db.Query(`SELECT amount FROM wallet WHERE currency = ? AND user_id = ?`, currency, userID).Scan(&amount); err != nil {
+	if err = c.db.Query(`SELECT amount FROM wallet WHERE currency = ? AND user_id = ? LIMIT 1`, currency, userID).Scan(&amount); err != nil {
 		logger.Error("GetWalletAmountFromCassandra: ", err)
 		return 0.0, errors.CassandraReadError.SetMessage(err.Error())
 	}
 
-	return amount, nil
+	return
 }
 
 func (c *cassandraRepository) CheckAmountExists(ctx context.Context, currency, userID string) (count int, err error) {
@@ -50,5 +51,16 @@ func (c *cassandraRepository) CheckAmountExists(ctx context.Context, currency, u
 		return 0, errors.CassandraReadError.SetMessage(err.Error())
 	}
 
-	return count, nil
+	return
+}
+
+func (c *cassandraRepository) GetWalletAmountAndTime(ctx context.Context, currency, userID string) (amount float64, time time.Time, err error) {
+	logger := logrus.WithContext(ctx)
+
+	if err = c.db.Query(`SELECT amount, updated_time FROM wallet WHERE currency = ? AND user_id = ? LIMIT 1`, currency, userID).Scan(&amount, &time); err != nil {
+		logger.Error("GetWalletAmountAndTimeFromCassandra: ", err)
+		return 0.0, time, errors.CassandraReadError.SetMessage(err.Error())
+	}
+
+	return
 }
