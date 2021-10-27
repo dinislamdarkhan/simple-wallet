@@ -2,6 +2,8 @@ package logic
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/dinislamdarkhan/simple-wallet/src/pkg/errors"
@@ -63,8 +65,11 @@ func WalletBalance(ctx context.Context, repo WalletBalanceRepository, req *domai
 			return nil, err
 		}
 
+		stringAmount := fmt.Sprintf("%.3f", amount)
+		formattedAmount, _ := strconv.ParseFloat(stringAmount, 64)
+
+		account.Amount = formattedAmount
 		account.Currency = currency
-		account.Amount = amount
 		account.UpdatedTime = updatedTime.String()
 		respAccounts = append(respAccounts, account)
 	}
