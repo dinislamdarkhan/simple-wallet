@@ -100,9 +100,12 @@ func TestWalletBalance(t *testing.T) {
 
 			if !reflect.DeepEqual(tt.wantResponse.Wallet, resp.Wallet) {
 				respBytes, err := json.Marshal(resp)
+				if err != nil {
+					t.Error("json deserialization bug ", err)
+				}
 				wantRespBytes, err := json.Marshal(tt.wantResponse)
 				if err != nil {
-					t.Error("deserialization bug ", err)
+					t.Error("json deserialization bug ", err)
 				}
 				t.Errorf("want response %s, but got %s", string(respBytes), string(wantRespBytes))
 				return
