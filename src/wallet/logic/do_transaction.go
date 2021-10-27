@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/dinislamdarkhan/simple-wallet/src/wallet/domain"
@@ -16,7 +17,7 @@ import (
 )
 
 const (
-	respMessage        = "Successfully changed wallet amount"
+	respMessage        = "Successfully changed wallet amount, current: "
 	currencyError      = "Incorrect currency, supports only USD,EUR"
 	operationTypeError = "Incorrect type, supports only deposit,withdrawal"
 )
@@ -50,7 +51,7 @@ func DoTransaction(ctx context.Context, repo DoTransactionRepository, req *domai
 	err = validate.Struct(req)
 	if err != nil {
 		logger.Error(err)
-		return nil, errors.BadRequest.SetMessage(err.Error())
+		return nil, errors.BadRequest
 	}
 
 	if !domain.CurrencyMap[req.Currency] {
@@ -89,7 +90,7 @@ func DoTransaction(ctx context.Context, repo DoTransactionRepository, req *domai
 	formattedTime, err := dateparse.ParseAny(req.TimePlaced)
 	if err != nil {
 		logger.Error(err)
-		return nil, errors.DeserializeError.SetMessage(err.Error())
+		return nil, errors.DeserializeError.SetMessage("Error at formatting time")
 	}
 
 	err = repo.UpdateWalletAmountCassandra(ctx, req.Currency, req.UserID, updatedAmount, formattedTime)
@@ -97,7 +98,7 @@ func DoTransaction(ctx context.Context, repo DoTransactionRepository, req *domai
 		return nil, err
 	}
 
-	resp = &domain.PostDoTransactionResponse{Message: respMessage}
+	resp = &domain.PostDoTransactionResponse{Message: respMessage + fmt.Sprintf("%.3f", updatedAmount)}
 
 	return
 }
