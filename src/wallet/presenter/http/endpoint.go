@@ -28,3 +28,18 @@ func makePostDoTransactionEndpoint(s presenter.Service) endpoint.Endpoint {
 		return resp, nil
 	}
 }
+
+func makeGetWalletBalanceEndpoint(s presenter.Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(domain.GetWalletBalanceRequest)
+		ctx, ctxCancel := context.WithTimeout(ctx, time.Minute)
+		defer ctxCancel()
+
+		resp, err := s.GetWalletBalance(ctx, &req)
+		if err != nil {
+			return nil, err
+		}
+
+		return resp, nil
+	}
+}
