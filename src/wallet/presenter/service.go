@@ -11,7 +11,8 @@ import (
 )
 
 type Service interface {
-	PostDoTransaction(ctx context.Context, request *domain.PostDoTransactionRequest) (*domain.PostDoTransactionResponse, error)
+	PostDoTransaction(ctx context.Context, request *domain.PostDoTransactionRequest) (resp *domain.PostDoTransactionResponse, err error)
+	GetWalletBalance(ctx context.Context, req *domain.GetWalletBalanceRequest) (resp *domain.GetWalletBalanceResponse, err error)
 }
 
 type service struct {
@@ -22,11 +23,29 @@ func New(store store.RepositoryStore) Service {
 	return &service{store: store}
 }
 
-func (s *service) PostDoTransaction(ctx context.Context, req *domain.PostDoTransactionRequest) (response *domain.PostDoTransactionResponse, err error) {
+func (s *service) PostDoTransaction(ctx context.Context, req *domain.PostDoTransactionRequest) (resp *domain.PostDoTransactionResponse, err error) {
 	ch := make(chan error, 1)
 
 	go func() {
-		response, err = logic.DoTransaction(ctx, &logic.DoTransactionFacade{Store: s.store}, req)
+		resp, err = logic.DoTransaction(ctx, &logic.DoTransactionFacade{Store: s.store}, req)
+
+		ch <- err
+	}()
+
+	select {
+	case <-ctx.Done():
+		err = errors.NetworkTimeout
+	case err = <-ch:
+	}
+
+	return
+}
+
+func (s *service) GetWalletBalance(ctx context.Context, req *domain.GetWalletBalanceRequest) (resp *domain.GetWalletBalanceResponse, err error) {
+	ch := make(chan error, 1)
+
+	go func() {
+		resp, err = logic.WalletBalance(ctx, &logic.WalletBalanceRepositoryFacade{Store: s.store}, req)
 
 		ch <- err
 	}()
