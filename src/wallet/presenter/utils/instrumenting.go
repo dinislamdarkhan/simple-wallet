@@ -1,11 +1,12 @@
-package middleware
+package utils
 
 import (
 	"context"
 	"time"
 
+	"github.com/dinislamdarkhan/simple-wallet/src/wallet/domain"
+
 	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter"
-	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter/data"
 	"github.com/go-kit/kit/metrics"
 )
 
@@ -35,7 +36,7 @@ func metricMethod(i *instrumentingMiddleware, method string, begin time.Time, er
 	i.requestLatency.With("method", method).Observe(time.Since(begin).Seconds())
 }
 
-func (i *instrumentingMiddleware) PostDoTransaction(ctx context.Context, req *data.PostDoTransactionRequest) (response *data.PostDoTransactionResponse, err error) {
+func (i *instrumentingMiddleware) PostDoTransaction(ctx context.Context, req *domain.PostDoTransactionRequest) (response *domain.PostDoTransactionResponse, err error) {
 	defer func(begin time.Time) {
 		metricMethod(i, "PostDoTransaction", begin, err)
 	}(time.Now())

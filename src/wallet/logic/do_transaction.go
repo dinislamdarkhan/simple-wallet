@@ -1,8 +1,10 @@
-package usecase
+package logic
 
 import (
 	"context"
 	"time"
+
+	"github.com/dinislamdarkhan/simple-wallet/src/wallet/domain"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
@@ -10,7 +12,6 @@ import (
 	"github.com/araddon/dateparse"
 	"github.com/dinislamdarkhan/simple-wallet/src/app/store"
 	"github.com/dinislamdarkhan/simple-wallet/src/pkg/errors"
-	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter/data"
 	"github.com/shopspring/decimal"
 )
 
@@ -42,7 +43,7 @@ func (f *DoTransactionFacade) CheckAmountExists(ctx context.Context, currency, u
 	return f.Store.WalletCassandra().CheckAmountExists(ctx, currency, userID)
 }
 
-func DoTransaction(ctx context.Context, repo DoTransactionRepository, req *data.PostDoTransactionRequest) (resp *data.PostDoTransactionResponse, err error) {
+func DoTransaction(ctx context.Context, repo DoTransactionRepository, req *domain.PostDoTransactionRequest) (resp *domain.PostDoTransactionResponse, err error) {
 	logger := logrus.WithContext(ctx)
 	validate := validator.New()
 
@@ -52,12 +53,12 @@ func DoTransaction(ctx context.Context, repo DoTransactionRepository, req *data.
 		return nil, errors.BadRequest.SetMessage(err.Error())
 	}
 
-	if !data.CurrencyMap[req.Currency] {
+	if !domain.CurrencyMap[req.Currency] {
 		logger.Error(currencyError)
 		return nil, errors.BadRequest.SetMessage(currencyError)
 	}
 
-	if !data.OperationTypeMap[req.Type] {
+	if !domain.OperationTypeMap[req.Type] {
 		logger.Error(operationTypeError)
 		return nil, errors.BadRequest.SetMessage(operationTypeError)
 	}
@@ -96,7 +97,7 @@ func DoTransaction(ctx context.Context, repo DoTransactionRepository, req *data.
 		return nil, err
 	}
 
-	resp = &data.PostDoTransactionResponse{Message: respMessage}
+	resp = &domain.PostDoTransactionResponse{Message: respMessage}
 
 	return
 }

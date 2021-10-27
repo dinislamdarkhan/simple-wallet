@@ -3,16 +3,20 @@ package wallet
 import (
 	"github.com/dinislamdarkhan/simple-wallet/src/app/store"
 	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter"
-	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter/middleware"
+	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter/utils"
 	kitmetrics "github.com/go-kit/kit/metrics/prometheus"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
+const (
+	serviceName = "simple-wallet"
+)
+
 func New(store store.RepositoryStore) (service presenter.Service) {
 	service = presenter.New(store)
-	service = middleware.WithLogging(service, "wallet")
+	service = utils.WithLogging(service, serviceName)
 	fieldKeys := []string{"method"}
-	service = middleware.WithInstrumenting(
+	service = utils.WithInstrumenting(
 		kitmetrics.NewCounterFrom(prometheus.CounterOpts{
 			Namespace: "simple-wallet-API",
 			Subsystem: "wallet_service",
@@ -32,7 +36,7 @@ func New(store store.RepositoryStore) (service presenter.Service) {
 			Help:      "Number of error requests received.",
 		}, fieldKeys),
 		service,
-		"wallet",
+		serviceName,
 	)
 
 	return

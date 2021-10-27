@@ -1,11 +1,12 @@
-package middleware
+package utils
 
 import (
 	"context"
 	"time"
 
+	"github.com/dinislamdarkhan/simple-wallet/src/wallet/domain"
+
 	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter"
-	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter/data"
 	"github.com/sirupsen/logrus"
 )
 
@@ -38,7 +39,7 @@ func logMethod(ctx context.Context, name, method string, request, response inter
 	}
 }
 
-func (l *loggingMiddleware) PostDoTransaction(ctx context.Context, req *data.PostDoTransactionRequest) (response *data.PostDoTransactionResponse, err error) {
+func (l *loggingMiddleware) PostDoTransaction(ctx context.Context, req *domain.PostDoTransactionRequest) (response *domain.PostDoTransactionResponse, err error) {
 	defer func(begin time.Time) {
 		logMethod(ctx, l.name, "PostDoTransaction", req, response, begin, err)
 	}(time.Now())

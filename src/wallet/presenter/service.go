@@ -3,16 +3,15 @@ package presenter
 import (
 	"context"
 
-	"github.com/dinislamdarkhan/simple-wallet/src/pkg/errors"
-	"github.com/dinislamdarkhan/simple-wallet/src/wallet/usecase"
-
-	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter/data"
+	"github.com/dinislamdarkhan/simple-wallet/src/wallet/domain"
+	"github.com/dinislamdarkhan/simple-wallet/src/wallet/logic"
 
 	"github.com/dinislamdarkhan/simple-wallet/src/app/store"
+	"github.com/dinislamdarkhan/simple-wallet/src/pkg/errors"
 )
 
 type Service interface {
-	PostDoTransaction(ctx context.Context, request *data.PostDoTransactionRequest) (*data.PostDoTransactionResponse, error)
+	PostDoTransaction(ctx context.Context, request *domain.PostDoTransactionRequest) (*domain.PostDoTransactionResponse, error)
 }
 
 type service struct {
@@ -23,11 +22,11 @@ func New(store store.RepositoryStore) Service {
 	return &service{store: store}
 }
 
-func (s *service) PostDoTransaction(ctx context.Context, req *data.PostDoTransactionRequest) (response *data.PostDoTransactionResponse, err error) {
+func (s *service) PostDoTransaction(ctx context.Context, req *domain.PostDoTransactionRequest) (response *domain.PostDoTransactionResponse, err error) {
 	ch := make(chan error, 1)
 
 	go func() {
-		response, err = usecase.DoTransaction(ctx, &usecase.DoTransactionFacade{Store: s.store}, req)
+		response, err = logic.DoTransaction(ctx, &logic.DoTransactionFacade{Store: s.store}, req)
 
 		ch <- err
 	}()

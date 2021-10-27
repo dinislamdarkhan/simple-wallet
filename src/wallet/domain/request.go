@@ -1,4 +1,4 @@
-package data
+package domain
 
 type PostDoTransactionRequest struct {
 	UserID     string  `json:"user_id" validate:"required"`

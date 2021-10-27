@@ -5,10 +5,11 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/dinislamdarkhan/simple-wallet/src/wallet/domain"
+
 	"github.com/dinislamdarkhan/simple-wallet/src/pkg/errors"
 
 	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter"
-	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter/data"
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 )
@@ -33,7 +34,7 @@ func MakeHandler(service presenter.Service) http.Handler {
 }
 
 func decodeDoTransactionRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var body data.PostDoTransactionRequest
+	var body domain.PostDoTransactionRequest
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		return nil, errors.DeserializeError.SetMessage(err.Error())
 	}

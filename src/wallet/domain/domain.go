@@ -1,4 +1,4 @@
-package data
+package domain
 
 var CurrencyMap = map[string]bool{
 	"EUR": true,
