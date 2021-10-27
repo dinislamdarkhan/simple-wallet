@@ -1,0 +1,11 @@
+{
+  "cassandra": {
+    "connection_ip": [
+      "localhost"
+    ],
+    "keyspace": "simple-wallet"
+  },
+  "logrus": {
+    "level": 5
+  }
+}
