@@ -1,0 +1,137 @@
+{
+  "swagger": "2.0",
+  "paths": {
+    "/v1/wallet/balance/{user_id}": {
+      "post": {
+        "description": "Get all balance of user group by currency",
+        "tags": [
+          "Wallet"
+        ],
+        "operationId": "GetWalletBalanceRequest",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/GetWalletBalanceRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GetWalletBalanceResponse",
+            "schema": {
+              "$ref": "#/definitions/GetWalletBalanceResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v1/wallet/transaction": {
+      "post": {
+        "description": "Request new transaction",
+        "tags": [
+          "Wallet"
+        ],
+        "operationId": "PostDoTransactionRequest",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PostDoTransactionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PostDoTransactionResponse",
+            "schema": {
+              "$ref": "#/definitions/PostDoTransactionResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Account": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "x-go-name": "Amount"
+        },
+        "currency": {
+          "type": "string",
+          "x-go-name": "Currency"
+        },
+        "updated_time": {
+          "type": "string",
+          "x-go-name": "UpdatedTime"
+        }
+      },
+      "x-go-package": "github.com/dinislamdarkhan/simple-wallet/src/wallet/domain"
+    },
+    "GetWalletBalanceRequest": {
+      "type": "object",
+      "properties": {
+        "UserID": {
+          "type": "string"
+        }
+      },
+      "x-go-package": "github.com/dinislamdarkhan/simple-wallet/src/wallet/domain"
+    },
+    "GetWalletBalanceResponse": {
+      "type": "object",
+      "properties": {
+        "wallet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Account"
+          },
+          "x-go-name": "Wallet"
+        }
+      },
+      "x-go-package": "github.com/dinislamdarkhan/simple-wallet/src/wallet/domain"
+    },
+    "PostDoTransactionRequest": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "x-go-name": "Amount"
+        },
+        "currency": {
+          "type": "string",
+          "x-go-name": "Currency"
+        },
+        "time_placed": {
+          "type": "string",
+          "x-go-name": "TimePlaced"
+        },
+        "type": {
+          "type": "string",
+          "x-go-name": "Type"
+        },
+        "user_id": {
+          "type": "string",
+          "x-go-name": "UserID"
+        }
+      },
+      "x-go-package": "github.com/dinislamdarkhan/simple-wallet/src/wallet/domain"
+    },
+    "PostDoTransactionResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        }
+      },
+      "x-go-package": "github.com/dinislamdarkhan/simple-wallet/src/wallet/domain"
+    }
+  }
+}
