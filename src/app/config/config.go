@@ -13,6 +13,7 @@ type Configs struct {
 
 type CassandraConfig struct {
 	ConnectionIP []string `json:"connection_ip"`
+	Keyspace     string   `json:"keyspace"`
 }
 
 type Logrus struct {

@@ -4,14 +4,15 @@ import (
 	"context"
 	"time"
 
+	"github.com/dinislamdarkhan/simple-wallet/src/wallet/domain"
+
 	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter"
-	"github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter/data"
 	"github.com/go-kit/kit/endpoint"
 )
 
 func makePostDoTransactionEndpoint(s presenter.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(data.PostDoTransactionRequest)
+		req := request.(domain.PostDoTransactionRequest)
 		ctx, ctxCancel := context.WithTimeout(ctx, time.Minute)
 		defer ctxCancel()
 

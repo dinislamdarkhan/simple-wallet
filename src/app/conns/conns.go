@@ -32,7 +32,7 @@ func cassandraConn(cfg config.CassandraConfig) (*gocql.Session, error) {
 	cluster.Timeout = 10 * time.Second
 	cluster.SocketKeepalive = 10 * time.Second
 
-	cluster.Keyspace = "simple-wallet"
+	cluster.Keyspace = cfg.Keyspace
 	cluster.Consistency = gocql.Quorum
 
 	client, err := cluster.CreateSession()

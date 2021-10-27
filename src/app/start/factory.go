@@ -2,11 +2,12 @@ package start
 
 import (
 	"github.com/dinislamdarkhan/simple-wallet/src/app/store"
-	wallet "github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter"
+	"github.com/dinislamdarkhan/simple-wallet/src/wallet"
+	walletPresenter "github.com/dinislamdarkhan/simple-wallet/src/wallet/presenter"
 )
 
 type service struct {
-	wallet wallet.Service
+	wallet walletPresenter.Service
 }
 
 func ServiceFactory(store store.RepositoryStore) *service {
